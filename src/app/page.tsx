@@ -96,7 +96,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col p-6">
-      <h1 className="text-center font-semibold text-3xl uppercase mb-6">
+      <h1 className="text-center font-semibold text-xl sm:text-2xl md:text-3xl uppercase mb-6">
         Uno ao làng mở rộng
       </h1>
       <div className="flex flex-row">
