@@ -1,5 +1,3 @@
-const { data5 } = require("./data");
-
 type Participant = {
   noRounds: number;
   cost: number;
@@ -57,7 +55,7 @@ function increasePlayedRoundOfParticipants(
   });
 }
 
-function calculateResult(str: string) {
+export function calculateResult(str: string) {
   const data = str.split(/\r?\n/);
   let currentPrize: number[] = [];
   let currentParticipants: string[] = [];
@@ -105,5 +103,11 @@ function calculateResult(str: string) {
   return result;
 }
 
-const result = calculateResult(data5);
-console.log(result);
+export function formatAmount(strAmount: string | number) {
+  const amount = Number(strAmount);
+  const formatter = new Intl.NumberFormat("sg-SG", {
+    maximumFractionDigits: 0,
+  });
+
+  return formatter.format(amount);
+}

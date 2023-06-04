@@ -1,113 +1,142 @@
-import Image from 'next/image'
+"use client";
+
+import { calculateResult, formatAmount } from "@/util/function";
+import { Button, Input, Table } from "antd";
+import clsx from "clsx";
+import { useState } from "react";
+import { data6 } from "@/assets/data";
+import { inputHistoryPlaceholder } from "@/util/constants";
+
+const { TextArea } = Input;
 
 export default function Home() {
+  const [rawData, setRawData] = useState<string>(data6);
+  const [columns, setColumns] = useState<any>(() => {
+    const result = calculateResult(data6);
+    return getColumns(result);
+  });
+  const [dataSource, setDataSource] = useState<any>(() => {
+    const result = calculateResult(data6);
+    return getDataSource(result);
+  });
+
+  function getColumns(result: any) {
+    const cols = Object.keys(result).map((name) => ({
+      title: <div className="text-center text-[15px]">{name}</div>,
+      dataIndex: name,
+      align: "right",
+      render: (text: string, _: any, index: number) => {
+        if (index === 0) {
+          return (
+            <span className="text-green-400 text-right font-medium">
+              {formatAmount(text)}
+            </span>
+          );
+        } else if (index === 2) {
+          return (
+            <span className="text-right font-medium">{formatAmount(text)}</span>
+          );
+        } else if (index === 3) {
+          const amount = Number(text);
+          return (
+            <span
+              className={clsx(
+                {
+                  "text-green-400": amount > 0,
+                  "text-red-400": amount < 0,
+                },
+                "text-right"
+              )}
+            >
+              <b>{formatAmount(text)}</b>
+            </span>
+          );
+        }
+
+        return <span className="text-right font-medium">{text}</span>;
+      },
+    }));
+
+    return [
+      {
+        title: "",
+        dataIndex: "key",
+        className: "text-[15px] font-semibold",
+      },
+      ...cols,
+    ];
+  }
+
+  function getDataSource(result: any) {
+    const keys = [
+      { label: "", dataIdx: "earn" as const },
+      { label: "No. Rounds", dataIdx: "noRounds" as const },
+      { label: "", dataIdx: "cost" as const },
+      { label: "Total", dataIdx: "pnl" as const },
+    ];
+    const dataSource = keys.map((key) => {
+      return Object.keys(result).reduce(
+        (acc: any, currName: string) => {
+          acc[currName] = result[currName][key.dataIdx];
+          return acc;
+        },
+        { key: key.label }
+      );
+    });
+
+    return dataSource;
+  }
+
+  const onCalculate = () => {
+    const result = calculateResult(rawData);
+
+    setColumns(getColumns(result));
+    setDataSource(getDataSource(result));
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
+    <main className="flex min-h-screen flex-col p-6">
+      <h1 className="text-center font-semibold text-3xl uppercase mb-6">
+        Uno ao làng mở rộng
+      </h1>
+      <div className="flex flex-row">
+        <div className="flex flex-col flex-grow max-w-[300px]">
+          <div className="flex flex-col pb-4">
+            <label htmlFor="historyInput" className="pb-2 font-medium">
+              History
+            </label>
+            <TextArea
+              id="historyInput"
+              value={rawData}
+              rows={6}
+              placeholder={inputHistoryPlaceholder}
+              onChange={(event) => setRawData(event.target.value)}
             />
-          </a>
+          </div>
+          <Button
+            type="primary"
+            className="w-fit bg-blue-600"
+            onClick={onCalculate}
+          >
+            Calculate result
+          </Button>
+        </div>
+        <div className="flex flex-col ml-4 flex-grow">
+          <div className="pb-2 font-medium">Result</div>
+          <Table
+            columns={columns}
+            dataSource={dataSource}
+            bordered
+            pagination={false}
+            className="w-fit min-w-[60%]"
+            rowClassName={() => "custom-border-color"}
+          />
+
+          <div className="flex flex-col mt-6">
+            <div className="italic">* Round: {formatAmount(2000)}</div>
+          </div>
         </div>
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
     </main>
-  )
+  );
 }
