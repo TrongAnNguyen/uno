@@ -140,7 +140,7 @@ export default function Home() {
       <h1 className="text-center font-semibold text-xl sm:text-2xl md:text-3xl uppercase mb-6">
         Uno ao làng mở rộng
       </h1>
-      <div className="flex flex-row">
+      <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4">
         <div className="flex flex-col flex-grow max-w-[300px]">
           <div className="flex flex-col pb-4">
             <label htmlFor="historyInput" className="pb-2 font-medium">
@@ -162,14 +162,14 @@ export default function Home() {
             Calculate result
           </Button>
         </div>
-        <div className="flex flex-col ml-4 flex-grow">
+        <div className="flex flex-col flex-grow">
           <div className="pb-2 font-medium">Result</div>
           <Table
             columns={columns}
             dataSource={dataSource}
             bordered
             pagination={false}
-            className="w-fit min-w-[60%]"
+            className="w-fit min-w-[60%] scrollbar-hide overflow-x-scroll"
             rowClassName={() => "custom-border-color"}
           />
 
