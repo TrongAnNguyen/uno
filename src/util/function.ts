@@ -1,8 +1,11 @@
+import { PRIZE_ORDER } from "./constants";
+
 type Participant = {
   noRounds: number;
   cost: number;
   earn: number;
   pnl: number;
+  prize: PRIZE_ORDER;
 };
 
 const ROW_TYPE = {
@@ -37,10 +40,13 @@ function getPrize(row: string) {
 
 function getParticipant(row: string) {
   if (row.startsWith("p:")) {
-    return row.slice(2).split(",");
+    return row
+      .slice(2)
+      .split(",")
+      .map((name) => name.trim());
   }
 
-  return row.split(",");
+  return row.split(",").map((name) => name.trim());
 }
 
 function increasePlayedRoundOfParticipants(
@@ -77,6 +83,7 @@ export function calculateResult(str: string) {
             cost: 0,
             earn: 0,
             pnl: 0,
+            prize: PRIZE_ORDER.DRAW,
           };
         }
       });
@@ -98,6 +105,12 @@ export function calculateResult(str: string) {
   Object.keys(result).forEach((participant) => {
     const playerResult = result[participant];
     playerResult.pnl = playerResult.earn - playerResult.cost;
+    playerResult.prize =
+      playerResult.pnl > 0
+        ? PRIZE_ORDER.WINNER
+        : playerResult.pnl < 0
+        ? PRIZE_ORDER.LOSER
+        : PRIZE_ORDER.DRAW;
   });
 
   return result;

@@ -3,26 +3,67 @@
 import { calculateResult, formatAmount } from "@/util/function";
 import { Button, Input, Table } from "antd";
 import clsx from "clsx";
+import Lottie from "lottie-react";
 import { useState } from "react";
-import { data6 } from "@/assets/data";
-import { inputHistoryPlaceholder } from "@/util/constants";
+import { data11June23 } from "@/assets/data";
+import { PRIZE_ORDER, inputHistoryPlaceholder } from "@/util/constants";
+import slothDoingMeditationIcon from "@/assets/icons/slothDoingMeditationIcon.json";
+import trophyIcon from "@/assets/icons/trophyIcon.json";
+import confettiIcon from "@/assets/icons/confettiIcon.json";
+import cryingSmoothymonIcon from "@/assets/icons/cryingSmoothymonIcon.json";
 
 const { TextArea } = Input;
 
 export default function Home() {
-  const [rawData, setRawData] = useState<string>(data6);
+  const initialData = data11June23;
+  const [rawData, setRawData] = useState<string>(initialData);
   const [columns, setColumns] = useState<any>(() => {
-    const result = calculateResult(data6);
+    const result = calculateResult(initialData);
     return getColumns(result);
   });
   const [dataSource, setDataSource] = useState<any>(() => {
-    const result = calculateResult(data6);
+    const result = calculateResult(initialData);
+
     return getDataSource(result);
   });
 
+  function renderPrizeIcon(type: PRIZE_ORDER) {
+    if (type === PRIZE_ORDER.WINNER) {
+      return (
+        <>
+          <Lottie className="w-[50px]" animationData={trophyIcon} />
+          <Lottie
+            className="absolute w-full -top-4 left-0"
+            animationData={confettiIcon}
+          />
+        </>
+      );
+    } else if (type === PRIZE_ORDER.LOSER) {
+      return (
+        <>
+          <Lottie className="w-[40px]" animationData={cryingSmoothymonIcon} />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Lottie
+            className="w-[40px]"
+            animationData={slothDoingMeditationIcon}
+          />
+        </>
+      );
+    }
+  }
+
   function getColumns(result: any) {
     const cols = Object.keys(result).map((name) => ({
-      title: <div className="text-center text-[15px]">{name}</div>,
+      title: (
+        <div className="relative text-center text-[15px] flex flex-row items-center">
+          {name}
+          {renderPrizeIcon(result[name].prize)}
+        </div>
+      ),
       dataIndex: name,
       align: "right",
       render: (text: string, _: any, index: number) => {

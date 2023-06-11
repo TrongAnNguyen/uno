@@ -137,3 +137,34 @@ Như,Ngát,Tuyền
 Ngát,Nhân,An
 Nhân,Tuyền,An
 `;
+
+export const data11June23 = `5000,2000,1000
+p:Ngát,Như,Nhân,An
+Ngát, Nhân, An
+Nhân, An, Như
+Ngát, An, Nhân
+Ngát, Như, An
+Ngát, Nhân, An
+An, Nhân, Như
+Như, Ngát, An
+Như, An, Nhân
+Ngát, Nhân, Như
+An, Nhân, Như
+Nhân, Ngát, Như
+An, Như, Nhân
+Như, Nhân, An
+Như, Nhân, Ngát
+Nhân, Ngát, Như
+An, Nhân, Ngát
+Ngát, Như, Nhân
+Ngát, Nhân, Như
+Như, An, Ngát
+Như, An, Ngát
+Như, Ngát, Nhân
+Nhân, Ngát, Như
+Ngát, Nhân, Như
+An, Như, Ngát
+An, Như, Nhân
+Ngát, An, Nhân
+Ngát, An, Nhân
+An, Như, Nhân`;
