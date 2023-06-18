@@ -5,7 +5,7 @@ import { Button, Input, Table } from "antd";
 import clsx from "clsx";
 import Lottie from "lottie-react";
 import { useState } from "react";
-import { data11June23 } from "@/assets/data";
+import { data18June23 } from "@/assets/data";
 import { PRIZE_ORDER, inputHistoryPlaceholder } from "@/util/constants";
 import slothDoingMeditationIcon from "@/assets/icons/slothDoingMeditationIcon.json";
 import trophyIcon from "@/assets/icons/trophyIcon.json";
@@ -15,7 +15,7 @@ import cryingSmoothymonIcon from "@/assets/icons/cryingSmoothymonIcon.json";
 const { TextArea } = Input;
 
 export default function Home() {
-  const initialData = data11June23;
+  const initialData = data18June23;
   const [rawData, setRawData] = useState<string>(initialData);
   const [columns, setColumns] = useState<any>(() => {
     const result = calculateResult(initialData);

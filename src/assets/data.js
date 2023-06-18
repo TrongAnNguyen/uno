@@ -168,3 +168,36 @@ An, Như, Nhân
 Ngát, An, Nhân
 Ngát, An, Nhân
 An, Như, Nhân`;
+
+export const data18June23 = `5000,3000
+p:Tuyền,Ngát,Nhân,An
+Tuyền, Nhân
+An, Nhân
+An, Tuyền
+Tuyền, Ngát
+Nhân,Ngát
+Ngát,An
+An,Ngát
+Nhân,An
+Nhân,Tuyền
+Nhân,Ngát
+Ngát,Nhân
+Nhân,Ngát
+Tuyền,Nhân
+Ngát,Tuyền
+Nhân,Tuyền
+Nhân,Ngát
+An,Nhân
+Nhân,Ngát
+Nhân,Ngát
+An,Tuyền
+Tuyền,An
+Ngát,Tuyền
+Ngát,An
+Ngát,Tuyền
+Nhân,Tuyền
+Ngát,Nhân
+Tuyền,Nhân
+Nhân,An
+An,Nhân
+Nhân,Ngát`;

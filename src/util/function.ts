@@ -21,14 +21,16 @@ function getRowType(row: string) {
 
   const rowData = row.split(",");
 
-  const isPrize =
-    rowData.length === 3 && rowData.some((data) => data && !isNaN(data as any));
+  const isPrize = rowData.every((data) => data && !isNaN(data as any));
   if (isPrize) return ROW_TYPE.PRIZE;
 
   const isParticipant = rowData[0].startsWith("p:");
   if (isParticipant) return ROW_TYPE.PARTICIPANT;
 
-  const isHistory = rowData.length === 3;
+  const isHistory =
+    typeof rowData[0] === "string" &&
+    !rowData[0].startsWith("p:") &&
+    rowData.length > 0;
   if (isHistory) return ROW_TYPE.HISTORY;
 
   return undefined;
